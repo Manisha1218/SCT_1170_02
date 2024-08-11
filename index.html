@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylish Stopwatch</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://source.unsplash.com/random/1920x1080') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        #stopwatch {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 50%;
+            border: 2px solid #495057;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            font-size: 4rem;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .btn {
+            font-size: 1.2rem;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        
+        .list-group-item {
+            background-color: #dc3545;
+            /* Red color */
+            color: #ffffff;
+            border: none;
+        }
+        
+        .list-group-item:nth-child(odd) {
+            background-color: #c82333;
+            /* Slightly darker red */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container text-center">
+        <h1 class="mb-4">Stylish Stopwatch</h1>
+        <div id="stopwatch">00:00:00</div>
+        <div>
+            <button id="startBtn" class="btn btn-success">Start</button>
+            <button id="pauseBtn" class="btn btn-warning">Pause</button>
+            <button id="resetBtn" class="btn btn-danger">Reset</button>
+            <button id="lapBtn" class="btn btn-primary">Lap</button>
+        </div>
+        <div class="mt-4">
+            <h3>Laps</h3>
+            <ul id="lapList" class="list-group"></ul>
+        </div>
+    </div>
+    <script>
+        let timer;
+        let elapsedTime = 0; // time in milliseconds
+        let isRunning = false;
+
+        function formatTime(ms) {
+            const hours = Math.floor(ms / 3600000);
+            const minutes = Math.floor((ms % 3600000) / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            timer = setInterval(() => {
+                elapsedTime += 500; // Update every 500 milliseconds
+                document.getElementById('stopwatch').textContent = formatTime(elapsedTime);
+            }, 500);
+        }
+
+        function pauseTimer() {
+            if (!isRunning) return;
+            clearInterval(timer);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            elapsedTime = 0;
+            document.getElementById('stopwatch').textContent = formatTime(elapsedTime);
+            document.getElementById('lapList').innerHTML = '';
+            isRunning = false;
+        }
+
+        function addLap() {
+            if (!isRunning) return;
+            const lapList = document.getElementById('lapList');
+            const lapItem = document.createElement('li');
+            lapItem.className = 'list-group-item';
+            lapItem.textContent = `Lap ${lapList.children.length + 1}: ${formatTime(elapsedTime)}`;
+            lapList.appendChild(lapItem);
+        }
+
+        document.getElementById('startBtn').addEventListener('click', startTimer);
+        document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
+        document.getElementById('resetBtn').addEventListener('click', resetTimer);
+        document.getElementById('lapBtn').addEventListener('click', addLap);
+    </script>
+</body>
+
+</html>
